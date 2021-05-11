@@ -7,8 +7,9 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const value = e.target.value
-    console.log(value)
+
+    setEmail(email.value)
+    setPassword(password.value)
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch(err => {
