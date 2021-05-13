@@ -10,9 +10,8 @@ const Login = ({history}) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    setEmail(email.value)
-    setPassword(password.value)
-    console.log(email.value)
+    setEmail(e.target.email.value)
+    setPassword(e.target.password.value)
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
       history.push('/')

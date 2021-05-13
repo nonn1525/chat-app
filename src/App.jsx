@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import Room from './Room';
+import Room from './pages/Room';
 import './App.css';
 import {AuthProvider} from './AuthService';
 import LoggedInRoute from './LoggedInRoute';
