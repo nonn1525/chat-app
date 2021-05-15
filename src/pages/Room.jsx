@@ -19,7 +19,8 @@ const Room = () => {
 
   const user = useContext(AuthContext)
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
     firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName
