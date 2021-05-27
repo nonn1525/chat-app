@@ -13,7 +13,8 @@ const Login = ({history}) => {
     setEmail(e.target.email.value)
     setPassword(e.target.password.value)
 
-    firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
       history.push('/')
     })
     .catch(err => {
@@ -50,6 +51,10 @@ const Login = ({history}) => {
         </div>
         <button type='submit'>Login</button>
       </form>
+      <button 
+        onClick={() => {
+          history.push('/SignUp')
+        }}>新規登録</button>
     </div>
   )
 }

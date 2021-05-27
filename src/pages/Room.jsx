@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
+import RoomItem from './RoomItem';
 
 const Room = () => {
   const [messages, setMessages] = useState(null)
@@ -9,13 +10,14 @@ const Room = () => {
   useEffect(() => {
     firebase.firestore().collection('messages')
       .onSnapshot((snapshot) => {
-        const messages = snapshot.docs.map(doc => {
+        const message = snapshot.docs.map(doc => {
           return doc.data()
         })
-        setMessages(messages)
+        setMessages(message)
       })
-  }, [])
-  console.log(messages)
+    }, [])
+
+    console.log(messages)
 
   const user = useContext(AuthContext)
 
@@ -25,15 +27,17 @@ const Room = () => {
       content: value,
       user: user.displayName
     })
+    setValue('')
   }
 
   return (
     <div>
       <h1>Room</h1>
       <ul>
-        <li>
-          Sample user : sample message
-        </li>
+        <RoomItem 
+          content={messages.content} 
+          user={messages.user} 
+        />
       </ul>
       <form onSubmit={handleSubmit}>
         <input type="text"
