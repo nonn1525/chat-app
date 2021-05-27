@@ -34,10 +34,16 @@ const Room = () => {
     <div>
       <h1>Room</h1>
       <ul>
-        <RoomItem 
-          content={messages.content} 
-          user={messages.user} 
-        />
+        {messages && 
+          messages.map(message => {
+            return(
+              <RoomItem 
+                content={message.content} 
+                user={message.user} 
+              />
+            )
+          })
+        }
       </ul>
       <form onSubmit={handleSubmit}>
         <input type="text"
