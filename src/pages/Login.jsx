@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import firebase from '../config/firebase';
 import { AuthContext } from '../AuthService';
 import { Redirect } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Login = ({history}) => {
   const [email, setEmail] = useState('')
@@ -29,6 +30,9 @@ const Login = ({history}) => {
 
   return (
     <div>
+       <Header>
+        <h1 className='bg-secondary'>ChatApp</h1>
+      </Header>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -58,5 +62,15 @@ const Login = ({history}) => {
     </div>
   )
 }
+
+const Header = styled.div`
+h1 {
+  width: 100%;
+  height: 80px;
+  color: white;
+  line-height: 80px;
+  padding-left: 30px; 
+}
+`;
 
 export default Login

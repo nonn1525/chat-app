@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
+import styled from 'styled-components';
+import { FormGroup, Input } from 'reactstrap';
+import List from '@material-ui/core/List';
 import RoomItem from './RoomItem';
 
 const Room = () => {
@@ -23,17 +26,44 @@ const Room = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    console.log(value)
     firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName
     })
     setValue('')
+    document.msgform.reset();
   }
 
   return (
     <div>
+      <Header>
+        <h1 className='bg-secondary'>ChatApp</h1>
+      </Header>
       <h1>Room</h1>
-      <ul>
+              <FormStyled>
+              <FormGroup>
+                <form
+                  name='msgform'  
+                  onSubmit={handleSubmit}>
+                <Input type='text' 
+                        className='chatinput' 
+                        onChange={e => setValue(e.target.value)}
+                />
+              <button 
+                className='btn btn-secondary' 
+                type='submit'>
+                  送信
+                </button>
+                </form>
+              </FormGroup>
+              <button 
+                className='logoutbtn btn btn-secondary' 
+                onClick={() => firebase.auth().signOut()}>
+                  Logout
+                </button>
+              </FormStyled>
+      <List>
         {messages && 
           messages.map(message => {
             return(
@@ -44,18 +74,28 @@ const Room = () => {
             )
           })
         }
-      </ul>
-      <form onSubmit={handleSubmit}>
-        <input type="text"
-              onChange={e => {
-                setValue(e.target.value)
-              }}
-        />
-      <button type='submit'>送信</button>
-      </form>
-      <button onClick={() => firebase.auth().signOut()}>Logout</button>
+      </List>
     </div>
   )
 }
+
+const Header = styled.div`
+  h1 {
+    width: 100%;
+    height: 80px;
+    color: white;
+    line-height: 80px;
+    padding-left: 30px;
+  }
+  `;
+
+const FormStyled = styled.div`
+  .chatinput {
+    width: 40%;
+  }
+  .logoutbtn {
+    margin-top: 2px;
+  }
+  `;
 
 export default Room;

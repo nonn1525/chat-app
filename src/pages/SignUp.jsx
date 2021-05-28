@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import firebase from '../config/firebase';
+import styled from 'styled-components';
 
 const SignUp = () => {
   const [email, setEmail] = useState('')
@@ -26,6 +27,9 @@ const SignUp = () => {
   
   return (
     <div>
+       <Header>
+        <h1 className='bg-secondary'>ChatApp</h1>
+      </Header>
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -60,5 +64,15 @@ const SignUp = () => {
     </div>
   )
 }
+
+const Header = styled.div`
+h1 {
+  width: 100%;
+  height: 80px;
+  color: white;
+  line-height: 80px;
+  padding-left: 30px; 
+}
+`;
 
 export default SignUp
