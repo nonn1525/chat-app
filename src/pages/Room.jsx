@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useForm } from "react-hook-form";
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
 import styled from 'styled-components';
@@ -10,6 +11,8 @@ const Room = () => {
   const [messages, setMessages] = useState(null)
   const [value, setValue] = useState('')
 
+  const { register, handleSubmit, errors } = useForm();
+
   useEffect(() => {
     firebase.firestore().collection('messages')
       .onSnapshot((snapshot) => {
@@ -20,19 +23,22 @@ const Room = () => {
       })
     }, [])
 
-    console.log(messages)
-
   const user = useContext(AuthContext)
 
-  const handleSubmit = (e) => {
+  const fhandleSubmit = (e) => {
     e.preventDefault()
     console.log(value)
     firebase.firestore().collection('messages').add({
       content: value,
-      user: user.displayName
+      user: user.displayName,
+      created: firebase.firestore.FieldValue.serverTimestamp(),
     })
     setValue('')
     document.msgform.reset();
+  }
+
+  const handleOnSubmit = (data) => {
+    console.log(data);
   }
 
   return (
@@ -45,11 +51,16 @@ const Room = () => {
         <FormGroup>
           <form
             name='msgform'  
-            onSubmit={handleSubmit}>
-          <Input type='text' 
+            onSubmit={fhandleSubmit,
+                      handleSubmit(handleOnSubmit)}>
+          <Input  ref={register({
+                        required: 'タイトルは必ず入力してください。'
+                    })}
+                  type='text' 
                   className='chatinput' 
                   onChange={e => setValue(e.target.value)}
           />
+          
         <button 
           className='btn btn-secondary' 
           type='submit'>
@@ -70,6 +81,7 @@ const Room = () => {
               <RoomItem 
                 content={message.content} 
                 user={message.user} 
+                created={message.timestamp} 
               />
             )
           })

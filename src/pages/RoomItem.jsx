@@ -8,9 +8,11 @@ import { Picker } from 'emoji-mart';
 import styled from 'styled-components';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import 'emoji-mart/css/emoji-mart.css';
+import dayjs from 'dayjs';
 
 
-const RoomItem = ({content, user}) => {
+
+const RoomItem = ({content, user, created}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedEmoji, setSelectedEmoji] = useState('')
 
@@ -33,33 +35,26 @@ const RoomItem = ({content, user}) => {
               <Typography
                 component="span"
                 variant="body2"
-                
                 color="textPrimary"
               >
-                {user}
+                UserName:{user}
+                <br />
+                {dayjs(created).format('YYYY/MM/DD HH:mm')}
+                <InsertEmoticonIcon style={{marginLeft: 20}}onClick={() => setIsOpen(!isOpen)}></InsertEmoticonIcon>
               </Typography>
               {selectedEmoji}
             </React.Fragment>
           }
         />
       </ListItem>
-      <InsertEmoticonIcon onClick={() => setIsOpen(!isOpen)}></InsertEmoticonIcon>
-      <PickerStyled>
         {isOpen ? 
           <Picker 
             onClick={emojiSelect} native />
             :
             <></>
           }
-      </PickerStyled>
     </div>
   )
 }
-
-const PickerStyled = styled.div`
-  position: fixed;
-  top: 40%;
-  left: 40%;
-`;
 
 export default RoomItem
