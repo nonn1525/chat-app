@@ -41,28 +41,28 @@ const Room = () => {
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Room</h1>
-              <FormStyled>
-              <FormGroup>
-                <form
-                  name='msgform'  
-                  onSubmit={handleSubmit}>
-                <Input type='text' 
-                        className='chatinput' 
-                        onChange={e => setValue(e.target.value)}
-                />
-              <button 
-                className='btn btn-secondary' 
-                type='submit'>
-                  送信
-                </button>
-                </form>
-              </FormGroup>
-              <button 
-                className='logoutbtn btn btn-secondary' 
-                onClick={() => firebase.auth().signOut()}>
-                  Logout
-                </button>
-              </FormStyled>
+        <FormStyled>
+        <FormGroup>
+          <form
+            name='msgform'  
+            onSubmit={handleSubmit}>
+          <Input type='text' 
+                  className='chatinput' 
+                  onChange={e => setValue(e.target.value)}
+          />
+        <button 
+          className='btn btn-secondary' 
+          type='submit'>
+            送信
+          </button>
+          </form>
+        </FormGroup>
+        <button 
+          className='logoutbtn btn btn-secondary' 
+          onClick={() => firebase.auth().signOut()}>
+            Logout
+          </button>
+        </FormStyled>
       <List>
         {messages && 
           messages.map(message => {

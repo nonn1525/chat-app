@@ -11,8 +11,15 @@ import 'emoji-mart/css/emoji-mart.css';
 
 
 const RoomItem = ({content, user}) => {
-  const [emoji, setEmoji] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedEmoji, setSelectedEmoji] = useState('')
+
+  const emojiSelect = emoji => {
+    console.log({ emoji });
+    setSelectedEmoji(emoji.native)
+    setIsOpen(false)
+  }
+
   return (
     <div>
       <ListItem alignItems="flex-start">
@@ -31,19 +38,20 @@ const RoomItem = ({content, user}) => {
               >
                 {user}
               </Typography>
-              {}
-              <InsertEmoticonIcon onClick={() => setIsOpen(!isOpen)}>絵文字</InsertEmoticonIcon>
-              <PickerStyled>
-                {isOpen ? 
-                  <Picker onSelect={emoji => setEmoji(emoji)} />
-                  :
-                  <></>
-                }
-              </PickerStyled>
+              {selectedEmoji}
             </React.Fragment>
           }
         />
       </ListItem>
+      <InsertEmoticonIcon onClick={() => setIsOpen(!isOpen)}></InsertEmoticonIcon>
+      <PickerStyled>
+        {isOpen ? 
+          <Picker 
+            onClick={emojiSelect} native />
+            :
+            <></>
+          }
+      </PickerStyled>
     </div>
   )
 }
@@ -52,7 +60,6 @@ const PickerStyled = styled.div`
   position: fixed;
   top: 40%;
   left: 40%;
-
 `;
 
 export default RoomItem
