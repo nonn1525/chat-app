@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
 import styled from 'styled-components';
-import { FormGroup, Input } from 'reactstrap';
+import { FormGroup, Input, Button } from 'reactstrap';
 import List from '@material-ui/core/List';
 import RoomItem from './RoomItem';
 
@@ -11,7 +11,10 @@ const Room = () => {
   const [messages, setMessages] = useState(null)
   const [value, setValue] = useState('')
 
-  const { register, handleSubmit, errors } = useForm();
+  const { name, control, rules } = useForm();
+  const {
+    field: { ref, ...rest },
+  } = useController({ name, control, rules })
 
   useEffect(() => {
     firebase.firestore().collection('messages')
@@ -27,7 +30,6 @@ const Room = () => {
 
   const fhandleSubmit = (e) => {
     e.preventDefault()
-    console.log(value)
     firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName,
@@ -37,10 +39,6 @@ const Room = () => {
     document.msgform.reset();
   }
 
-  const handleOnSubmit = (data) => {
-    console.log(data);
-  }
-
   return (
     <div>
       <Header>
@@ -48,18 +46,19 @@ const Room = () => {
       </Header>
       <h1>Room</h1>
         <FormStyled>
+      <Controller 
+        name='msg' 
+        control={control}
+        render={({ field : onChange, onBlur, value, ref}) => (
         <FormGroup>
-          <form
+          <form 
             name='msgform'  
-            onSubmit={fhandleSubmit,
-                      handleSubmit(handleOnSubmit)}>
-          <Input  ref={register({
-                        required: 'タイトルは必ず入力してください。'
-                    })}
+            onSubmit={fhandleSubmit}>
+          <Input  {...field}
                   type='text' 
                   className='chatinput' 
                   onChange={e => setValue(e.target.value)}
-          />
+                  />
           
         <button 
           className='btn btn-secondary' 
@@ -68,6 +67,9 @@ const Room = () => {
           </button>
           </form>
         </FormGroup>
+        )}
+          rules={{required: true}}
+          />
         <button 
           className='logoutbtn btn btn-secondary' 
           onClick={() => firebase.auth().signOut()}>
@@ -87,6 +89,21 @@ const Room = () => {
           })
         }
       </List>
+      {/* <form onSubmit={handleSubmit(onSubmit)}>
+      <input
+        label="example1"
+        fullWidth
+        name="example1"
+        inputRef={inputRef}{...inputProps}
+        error={Boolean(errors.example1)}
+        helperText={errors.example1 && "文章が短いよ！"}
+      />
+
+        <Button type="submit" >
+          submit
+        </Button>
+      
+    </form> */}
     </div>
   )
 }
