@@ -11,13 +11,10 @@ const Room = () => {
   const [messages, setMessages] = useState(null)
   const [value, setValue] = useState('')
 
-  const { register, name, formState: {errors}, handleSubmit, control, rules } = useForm();
+  const { register, formState: {errors}, handleSubmit, control, rules } = useForm();
   const handleonSubmit = (data) => {
     console.log(data)
   }
-  // const {
-  //   field: { ref, ...rest },
-  // } = useController({ name, control, rules })
 
   useEffect(() => {
     firebase.firestore().collection('messages')
@@ -44,16 +41,58 @@ const Room = () => {
   }
 
   return (
-    <div>
+    //1
+    // <div>
+    //   <Header>
+    //     <h1 className='bg-secondary'>ChatApp</h1>
+    //   </Header>
+    //   <h1>Room</h1>
+    //     <FormStyled>
+    //   <Controller 
+    //     name='msg' 
+    //     control={control}
+    //     render={({ field : onChange, onBlur, value, ref}) => (
+    //     <FormGroup>
+    //       <form 
+    //         name='msgform'  
+    //         onSubmit={fhandleSubmit}
+    //         >
+             
+    //       <Input 
+    //        {...field}
+    //               type='text' 
+    //               className='chatinput' 
+    //               name='chatInput'
+    //               onChange={e => setValue(e.target.value)}
+    //               {...register("chatInput", {
+    //                 required: true, minLength: 1
+    //               })}
+    //               error={Boolean(errors.chatInput)}
+    //               helperText={errors.chat && <p>required</p>}
+    //               />
+          
+    //     <button 
+    //       className='btn btn-secondary' 
+    //       type='submit'>
+    //         送信
+    //       </button>
+    //       </form>
+    //     </FormGroup>
+    //     )}
+    //       rules={{required: true}}
+    //       />
+    // <div>
+      //2
+      <div>
       <Header>
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Room</h1>
         <FormStyled>
-      {/* <Controller 
+      <Controller 
         name='msg' 
         control={control}
-        render={({ field : onChange, onBlur, value, ref}) => ( */}
+        render={({field}) => (
         <FormGroup>
           <form 
             name='msgform'  
@@ -61,18 +100,16 @@ const Room = () => {
             >
              
           <Input 
-          //  {...field}
-                  type='text' 
-                  className='chatinput' 
-                  name='chatInput'
-                  onChange={e => setValue(e.target.value)}
-                  {...register("chatInput", {
-                    required: true, minLength: 1
-                  })}
-                  error={Boolean(errors.chatInput)}
-                  helperText={errors.chat && <p>required</p>}
-                  />
-          
+            type='text' 
+            className='chatinput' 
+            name='chatInput'
+            onChange={e => setValue(e.target.value)}
+            {...register("chatInput", {
+              required: true, minLength: 1
+            })}
+            error={Boolean(errors.chatInput)}
+            helperText={errors.chat && <p>required</p>}
+            />
         <button 
           className='btn btn-secondary' 
           type='submit'>
@@ -80,9 +117,8 @@ const Room = () => {
           </button>
           </form>
         </FormGroup>
-        {/* )}
-          rules={{required: true}}
-          /> */}
+        )}
+          />
         <button 
           className='logoutbtn btn btn-secondary' 
           onClick={() => firebase.auth().signOut()}>
@@ -102,21 +138,6 @@ const Room = () => {
           })
         }
       </List>
-      {/* <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        label="example1"
-        fullWidth
-        name="example1"
-        inputRef={inputRef}{...inputProps}
-        error={Boolean(errors.example1)}
-        helperText={errors.example1 && "文章が短いよ！"}
-      />
-
-        <Button type="submit" >
-          submit
-        </Button>
-      
-    </form> */}
     </div>
   )
 }
