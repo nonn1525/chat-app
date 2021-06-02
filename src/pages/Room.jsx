@@ -3,18 +3,26 @@ import { useForm, Controller } from "react-hook-form";
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
 import styled from 'styled-components';
-import { FormGroup, Input, Button } from 'reactstrap';
+import { FormGroup, Input } from 'reactstrap';
 import List from '@material-ui/core/List';
 import RoomItem from './RoomItem';
+import { nanoid } from 'nanoid';
 
 const Room = () => {
   const [messages, setMessages] = useState(null)
   const [value, setValue] = useState('')
+  const [created, setCreated] = useState('')
 
-  const { register, formState: {errors}, handleSubmit, control, rules } = useForm();
-  const handleonSubmit = (data) => {
-    console.log(data)
+  const { 
+    formState: {errors}, 
+    handleSubmit, 
+    control
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log("Submit:", data)
   }
+  console.log("Errors:", errors);
 
   useEffect(() => {
     firebase.firestore().collection('messages')
@@ -23,17 +31,17 @@ const Room = () => {
           return doc.data()
         })
         setMessages(message)
+        setCreated(created)
       })
     }, [])
 
   const user = useContext(AuthContext)
 
-  const fhandleSubmit = (e) => {
-    e.preventDefault()
-    handleSubmit(handleonSubmit)
+  const fhandleSubmit = () => {
     firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName,
+      id: nanoid(),
       created: firebase.firestore.FieldValue.serverTimestamp(),
     })
     setValue('')
@@ -41,84 +49,38 @@ const Room = () => {
   }
 
   return (
-    //1
-    // <div>
-    //   <Header>
-    //     <h1 className='bg-secondary'>ChatApp</h1>
-    //   </Header>
-    //   <h1>Room</h1>
-    //     <FormStyled>
-    //   <Controller 
-    //     name='msg' 
-    //     control={control}
-    //     render={({ field : onChange, onBlur, value, ref}) => (
-    //     <FormGroup>
-    //       <form 
-    //         name='msgform'  
-    //         onSubmit={fhandleSubmit}
-    //         >
-             
-    //       <Input 
-    //        {...field}
-    //               type='text' 
-    //               className='chatinput' 
-    //               name='chatInput'
-    //               onChange={e => setValue(e.target.value)}
-    //               {...register("chatInput", {
-    //                 required: true, minLength: 1
-    //               })}
-    //               error={Boolean(errors.chatInput)}
-    //               helperText={errors.chat && <p>required</p>}
-    //               />
-          
-    //     <button 
-    //       className='btn btn-secondary' 
-    //       type='submit'>
-    //         送信
-    //       </button>
-    //       </form>
-    //     </FormGroup>
-    //     )}
-    //       rules={{required: true}}
-    //       />
-    // <div>
-      //2
       <div>
       <Header>
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Room</h1>
         <FormStyled>
+        <form 
+          name='msgform'  
+          onSubmit={handleSubmit(onSubmit), fhandleSubmit}
+          >
+      <FormGroup>
       <Controller 
         name='msg' 
         control={control}
         render={({field}) => (
-        <FormGroup>
-          <form 
-            name='msgform'  
-            onSubmit={fhandleSubmit}
-            >
-             
           <Input 
             type='text' 
-            className='chatinput' 
-            name='chatInput'
+            className='chatinput'
             onChange={e => setValue(e.target.value)}
-            {...register("chatInput", {
-              required: true, minLength: 1
-            })}
-            error={Boolean(errors.chatInput)}
-            helperText={errors.chat && <p>required</p>}
-            />
-        <button 
-          className='btn btn-secondary' 
-          type='submit'>
-            送信
-          </button>
-          </form>
-        </FormGroup>
-        )}
           />
+        )}
+        rules={{
+          required: true
+        }}
+      />
+      <button 
+        className='btn btn-secondary' 
+        type='submit'>
+          送信
+      </button>
+    </FormGroup>
+        </form>
         <button 
           className='logoutbtn btn btn-secondary' 
           onClick={() => firebase.auth().signOut()}>
