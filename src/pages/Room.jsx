@@ -11,10 +11,13 @@ const Room = () => {
   const [messages, setMessages] = useState(null)
   const [value, setValue] = useState('')
 
-  const { name, control, rules } = useForm();
-  const {
-    field: { ref, ...rest },
-  } = useController({ name, control, rules })
+  const { register, name, formState: {errors}, handleSubmit, control, rules } = useForm();
+  const handleonSubmit = (data) => {
+    console.log(data)
+  }
+  // const {
+  //   field: { ref, ...rest },
+  // } = useController({ name, control, rules })
 
   useEffect(() => {
     firebase.firestore().collection('messages')
@@ -30,6 +33,7 @@ const Room = () => {
 
   const fhandleSubmit = (e) => {
     e.preventDefault()
+    handleSubmit(handleonSubmit)
     firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName,
@@ -46,18 +50,27 @@ const Room = () => {
       </Header>
       <h1>Room</h1>
         <FormStyled>
-      <Controller 
+      {/* <Controller 
         name='msg' 
         control={control}
-        render={({ field : onChange, onBlur, value, ref}) => (
+        render={({ field : onChange, onBlur, value, ref}) => ( */}
         <FormGroup>
           <form 
             name='msgform'  
-            onSubmit={fhandleSubmit}>
-          <Input  {...field}
+            onSubmit={fhandleSubmit}
+            >
+             
+          <Input 
+          //  {...field}
                   type='text' 
                   className='chatinput' 
+                  name='chatInput'
                   onChange={e => setValue(e.target.value)}
+                  {...register("chatInput", {
+                    required: true, minLength: 1
+                  })}
+                  error={Boolean(errors.chatInput)}
+                  helperText={errors.chat && <p>required</p>}
                   />
           
         <button 
@@ -67,9 +80,9 @@ const Room = () => {
           </button>
           </form>
         </FormGroup>
-        )}
+        {/* )}
           rules={{required: true}}
-          />
+          /> */}
         <button 
           className='logoutbtn btn btn-secondary' 
           onClick={() => firebase.auth().signOut()}>
