@@ -1,15 +1,38 @@
 import React, { useState, useContext } from 'react';
 import firebase from '../config/firebase';
+import { useForm, Controller, } from "react-hook-form";
 import { AuthContext } from '../AuthService';
 import { Redirect } from 'react-router-dom';
+import { FormGroup, Input, Label } from 'reactstrap';
 import styled from 'styled-components';
 
 const Login = ({history}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  // const { 
+  //   formState: {errors}, 
+  //   handleSubmit, 
+  //   control,
+  // } = useForm();
+
+  // const onSubmit = (data) => {
+  //   console.log("Submit:", data)
+  //   setEmail(e.target.email.value)
+  //   setPassword(e.target.password.value)
+
+  //   firebase.auth().signInWithEmailAndPassword(email, password)
+  //   .then(() => {
+  //     history.push('/')
+  //   })
+  //   .catch(err => {
+  //       console.log(err)
+  //   })
+  // }
+  // console.log("Errors:", errors);
+
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.previentDefault()
 
     setEmail(e.target.email.value)
     setPassword(e.target.password.value)
@@ -36,8 +59,8 @@ const Login = ({history}) => {
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor='email'>E-mail</label>
-          <input
+          <Label htmlFor='email'>E-mail</Label>
+          <Input
             type='email'
             id='email'
             name='email'
@@ -45,8 +68,8 @@ const Login = ({history}) => {
           />
         </div>
         <div>
-          <label htmlFor='password'>Password</label>
-          <input
+          <Label htmlFor='password'>Password</Label>
+          <Input
             type='password'
             id='password'
             name='password'

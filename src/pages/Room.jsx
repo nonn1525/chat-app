@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
 import styled from 'styled-components';
@@ -10,17 +11,24 @@ import { nanoid } from 'nanoid';
 
 const Room = () => {
   const [messages, setMessages] = useState(null)
-  const [value, setValue] = useState('')
+  // const [value, setValue] = useState('')
   const [created, setCreated] = useState('')
 
   const { 
     formState: {errors}, 
     handleSubmit, 
-    control
+    control,
   } = useForm();
 
   const onSubmit = (data) => {
     console.log("Submit:", data)
+    firebase.firestore().collection('messages').add({
+      content: data.msg,
+      user: user.displayName,
+      id: nanoid(),
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+    })
+    document.msgform.reset();
   }
   console.log("Errors:", errors);
 
@@ -37,43 +45,42 @@ const Room = () => {
 
   const user = useContext(AuthContext)
 
-  const fhandleSubmit = () => {
-    firebase.firestore().collection('messages').add({
-      content: value,
-      user: user.displayName,
-      id: nanoid(),
-      created: firebase.firestore.FieldValue.serverTimestamp(),
-    })
-    setValue('')
-    document.msgform.reset();
-  }
-
   return (
       <div>
       <Header>
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Room</h1>
+      {/* <ErrorMessage
+        errors={errors}
+        name="singleErrorInput"
+        
+        render={({ message='入力してください' }) => <p>{message}</p>}
+      /> */}
         <FormStyled>
         <form 
-          name='msgform'  
-          onSubmit={handleSubmit(onSubmit), fhandleSubmit}
-          >
-      <FormGroup>
-      <Controller 
-        name='msg' 
-        control={control}
-        render={({field}) => (
-          <Input 
-            type='text' 
-            className='chatinput'
-            onChange={e => setValue(e.target.value)}
-          />
-        )}
-        rules={{
-          required: true
-        }}
-      />
+          // name='msgform'  
+          onSubmit={handleSubmit(onSubmit)}
+        >
+        <FormGroup>
+        <Controller 
+          name='msg' 
+          control={control}
+          render={({field:{onChange}}) => (
+            <Input 
+              type='text' 
+              className='chatinput' 
+              onChange={onChange}
+            />
+            
+          )}
+          
+          rules={{
+           required: true
+         }}
+       />
+       {/* <ErrorMessage errors={errors} name="singleErrorInput" message='入力してください' /> */}
+      
       <button 
         className='btn btn-secondary' 
         type='submit'>

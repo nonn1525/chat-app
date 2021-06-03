@@ -1,11 +1,31 @@
 import React, { useState } from 'react';
 import firebase from '../config/firebase';
+import { useForm, Controller, } from "react-hook-form";
+import { FormGroup, Input } from 'reactstrap';
 import styled from 'styled-components';
 
 const SignUp = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+
+  // const onSubmit = (data) => {
+  //   console.log("Submit:", data)
+  //   setName(e.target.name.value)
+  //   setEmail(e.target.email.value)
+  //   setPassword(e.target.password.value)
+
+  //   firebase.auth().createUserWithEmailAndPassword(email, password)
+  //   .then(({user}) => {
+  //     user.updateProfile({
+  //       displayName:name
+  //     })
+  //   })
+  //     .catch(err => {
+  //       console.log(err)
+  //     })
+  // }
+  console.log("Errors:", errors);
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -31,10 +51,10 @@ const SignUp = () => {
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="name">Name</label>
-          <input
+          <Label htmlFor="name">Name</Label>
+          <Input
             name='name' 
             type='name' 
             id='name' 
@@ -42,8 +62,8 @@ const SignUp = () => {
           />
           </div>
         <div>
-          <label htmlFor="email">E-mail</label>
-          <input
+          <Label htmlFor="email">E-mail</Label>
+          <Input
             name='email' 
             type='email' 
             id='email' 
