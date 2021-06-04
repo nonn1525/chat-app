@@ -3,7 +3,7 @@ import firebase from '../config/firebase';
 import { useForm, Controller, } from "react-hook-form";
 import { AuthContext } from '../AuthService';
 import { Redirect } from 'react-router-dom';
-import { FormGroup, Input, Label } from 'reactstrap';
+import { FormGroup, Input, Label, Button } from 'reactstrap';
 import styled from 'styled-components';
 
 const Login = ({history}) => {
@@ -58,6 +58,7 @@ const Login = ({history}) => {
       </Header>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
+
         <div>
           <Label htmlFor='email'>E-mail</Label>
           <Input
@@ -76,12 +77,13 @@ const Login = ({history}) => {
             placeholder='password'
           />
         </div>
-        <button type='submit'>Login</button>
+
+        <Button type='submit'>Login</Button>
       </form>
-      <button 
+      <Button 
         onClick={() => {
           history.push('/SignUp')
-        }}>新規登録</button>
+        }}>新規登録</Button>
     </div>
   )
 }

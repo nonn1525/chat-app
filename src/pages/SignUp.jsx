@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import firebase from '../config/firebase';
 import { useForm, Controller, } from "react-hook-form";
-import { FormGroup, Input } from 'reactstrap';
+import { FormGroup, Input, Label, Button } from 'reactstrap';
 import styled from 'styled-components';
 
 const SignUp = () => {
@@ -25,7 +25,7 @@ const SignUp = () => {
   //       console.log(err)
   //     })
   // }
-  console.log("Errors:", errors);
+  // console.log("Errors:", errors);
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -51,7 +51,7 @@ const SignUp = () => {
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <div>
           <Label htmlFor="name">Name</Label>
           <Input
@@ -79,7 +79,7 @@ const SignUp = () => {
                 placeholder='Password' 
             />
           </div>
-        <button type='submit'>Sign Up</button>
+        <Button type='submit'>Sign Up</Button>
       </form>
     </div>
   )
