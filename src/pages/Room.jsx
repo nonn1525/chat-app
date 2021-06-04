@@ -1,17 +1,36 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm, Controller, } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import firebase from '../config/firebase';
 import {AuthContext} from '../AuthService';
 import styled from 'styled-components';
 import { FormGroup, Input } from 'reactstrap';
 import List from '@material-ui/core/List';
 import RoomItem from './RoomItem';
+import { nanoid } from 'nanoid';
 
 const Room = () => {
   const [messages, setMessages] = useState(null)
-  const [value, setValue] = useState('')
+  // const [value, setValue] = useState('')
+  const [created, setCreated] = useState('')
 
-  const { register, handleSubmit, errors } = useForm();
+  const { 
+    formState: {errors}, 
+    handleSubmit, 
+    control,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log("Submit:", data)
+    firebase.firestore().collection('messages').add({
+      content: data.msg,
+      user: user.displayName,
+      id: nanoid(),
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+    })
+    document.msgform.reset();
+  }
+  console.log("Errors:", errors);
 
   useEffect(() => {
     firebase.firestore().collection('messages')
@@ -20,54 +39,55 @@ const Room = () => {
           return doc.data()
         })
         setMessages(message)
+        setCreated(created)
       })
     }, [])
 
   const user = useContext(AuthContext)
 
-  const fhandleSubmit = (e) => {
-    e.preventDefault()
-    console.log(value)
-    firebase.firestore().collection('messages').add({
-      content: value,
-      user: user.displayName,
-      created: firebase.firestore.FieldValue.serverTimestamp(),
-    })
-    setValue('')
-    document.msgform.reset();
-  }
-
-  const handleOnSubmit = (data) => {
-    console.log(data);
-  }
-
   return (
-    <div>
+      <div>
       <Header>
         <h1 className='bg-secondary'>ChatApp</h1>
       </Header>
       <h1>Room</h1>
+      {/* <ErrorMessage
+        errors={errors}
+        name="singleErrorInput"
+        
+        render={({ message='入力してください' }) => <p>{message}</p>}
+      /> */}
         <FormStyled>
+        <form 
+          // name='msgform'  
+          onSubmit={handleSubmit(onSubmit)}
+        >
         <FormGroup>
-          <form
-            name='msgform'  
-            onSubmit={fhandleSubmit,
-                      handleSubmit(handleOnSubmit)}>
-          <Input  ref={register({
-                        required: 'タイトルは必ず入力してください。'
-                    })}
-                  type='text' 
-                  className='chatinput' 
-                  onChange={e => setValue(e.target.value)}
-          />
+        <Controller 
+          name='msg' 
+          control={control}
+          render={({field:{onChange}}) => (
+            <Input 
+              type='text' 
+              className='chatinput' 
+              onChange={onChange}
+            />
+            
+          )}
           
-        <button 
-          className='btn btn-secondary' 
-          type='submit'>
-            送信
-          </button>
-          </form>
-        </FormGroup>
+          rules={{
+           required: true
+         }}
+       />
+       {/* <ErrorMessage errors={errors} name="singleErrorInput" message='入力してください' /> */}
+      
+      <button 
+        className='btn btn-secondary' 
+        type='submit'>
+          送信
+      </button>
+    </FormGroup>
+        </form>
         <button 
           className='logoutbtn btn btn-secondary' 
           onClick={() => firebase.auth().signOut()}>
